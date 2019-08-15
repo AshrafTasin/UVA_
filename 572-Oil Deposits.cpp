@@ -1,6 +1,6 @@
 /*----------------------|
 / Author : Ashraf Tasin |
-/ Date   :   23.09.18   |
+/ Date   :   29.07.19   |
 /----------------------*/
 
 #include<bits/stdc++.h>
@@ -8,77 +8,82 @@
 #define mp make_pair
 #define ll long long
 #define all v.begin(),v.end()
-#define M it=m.begin(),it!=m.end(),it++
+#define flash ios :: sync_with_stdio(false); cin.tie(0); cout.tie(0);
 #define db double
+#define endl "\n"
+#define mnm pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>
 #define show for(int i=0;i<v.size();i++) cout << v[i] << " ";
+#define eps 1e-6
+#define mx 100004
 using namespace std;
 
 
-vector<string> v;
-int r,c,cnt=0;
+int dx[]={-1,1,-1,0,1,-1,0,1};
+int dy[]={0,0,-1,-1,-1,1,1,1};
+
+/*Knight Moves
+
+int dx[] = { 2, 1, -1, -2, -2, -1, 1, 2 };
+int dy[] = { 1, 2, 2, 1, -1, -2, -2, -1 }; */
+
+/*Normal Moves
+
+int x[] = {0, 1, 0, -1};
+int y[] = {-1, 0, 1, 0}; */
+
+bool grid[150][150];
+int n,m;
 
 
-void dfs(int rr,int cc)
+void dfs(int x,int y)
 {
-    if(rr<0 or cc<0 or rr==r or cc==c) return;
-    if(v[rr][cc]=='0') return;
-    if(v[rr][cc]=='1')
+    grid[x][y]=0;
+
+    for(int i=0;i<8;++i)
     {
-        cnt++;
-        v[rr][cc]='0';
+        int p=x+dx[i];
+        int q=y+dy[i];
+
+        if(p>=0 and q>=0 and p<n and q<m and grid[p][q]) dfs(p,q);
     }
-
-    dfs(rr,cc+1);
-    dfs(rr,cc-1);
-    dfs(rr+1,cc);
-    dfs(rr-1,cc);
-    dfs(rr+1,cc+1);
-    dfs(rr+1,cc-1);
-    dfs(rr-1,cc+1);
-    dfs(rr-1,cc-1);
-
 }
 
 
 int main()
 {
-    int tc;
-    string a;
-    cin >> tc;
-    getchar();
-    getchar();
+    flash
 
-    for(int ii=0;ii<tc;ii++)
+    while(cin >> n >> m)
     {
-        p=0;
-        memset(grid,'\0',sizeof grid);
+        if(n==0 and m==0) break;
 
-        if(ii!=0) cout << endl;
+        memset(grid,0,sizeof grid);
 
-        while(gets(grid[p]))
+        for(int i=0;i<n;++i)
         {
-            if(grid[p][0]=='\0') break;
-            p++;
+            for(int j=0;j<m;++j)
+            {
+                char x;
+                cin >> x;
+                if(x=='@') grid[i][j]=1;
+                else grid[i][j]=0;
+            }
         }
 
-        r=p;
-        c=v[0].size();
-        int res=0;
+        int ans=0;
 
-        for(int i=0;i<r;i++)
+        for(int i=0;i<n;++i)
         {
-            for(int j=0;j<c;j++)
+            for(int j=0;j<m;++j)
             {
-                if(v[i][j]=='1')
+                if(grid[i][j])
                 {
-                    cnt=1;
                     dfs(i,j);
-                    res=max(res,cnt);
+                    ++ans;
                 }
             }
         }
 
-        cout << res << endl;
+        cout << ans << endl;
     }
-
 }
